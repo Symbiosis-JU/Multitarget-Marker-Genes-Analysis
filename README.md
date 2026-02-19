@@ -67,7 +67,7 @@ To successfully use our tools, you need some external programs and packages. Bel
 - _usearch v11.0.667_i86linux32_
 - _vsearch v2.22.1_linux_x86_64_
 - _PEAR v0.9.11_
-- _Python 3.13.2_ and its packages (you can install them using the command **pip install <name_of_the_package**):
+- _Python 3.13.2_ and its packages (you can install them using the command **pip install <name_of_the_package>**):
     - os
     - sys
     - re
@@ -101,7 +101,7 @@ To successfully use our tools, you need some external programs and packages. Bel
 - Produces zOTU/OTU tables used by other scripts.
 
 ### symbio_barcode:
-- Uses COI zotu table (produced by LSD) as an input,
+- Uses COI zotu table (produced by symbio_core) as an input,
 - creates:
   - table with info about the most abundant COI barcode, taxonomy and bacteria presence,
   - fasta file, containing the most abundant Eucaryotic COI barcode for each library/sample,
@@ -124,17 +124,19 @@ Most of our scripts require information from the user. Instead of re-typing them
 
 **You can create your own master.info (tab-delimited) with the following headers:**
 _Target_organism	Gene	Gene_fragment	Description	Primer_Set	Primer_Forward	Primer_Reverse	Ref	Min_insert_size	Max_insert_size	Database_path_
-**Target_organism** - the info about what organisms your primers are targeting (Insect, Plant, Bacteria, Fungi),
-**Gene** - what gene do your primers target (e.g., COI, 16S, ITS),
-**Gene_fragment** - what fragment of the gene is amplified during PCR (for example, in bacterial 16S, it can be V4 or V1-V2 hypervariable region),
-**Description** - as other users might not be familiar with crazy gene names, it is a good idea to describe what a particular gene is,
-**Primer_Set** - what primer set are you using to amplify the marker gene fragment (extremely important for writing a paper),
-**Primer_Forward** - the sequence of the forward primer used in PCR, IUPAC nucleotide code for degenerate primers is welcomed, 
-**Primer_Reverse** - the same as above, but for the reverse primer (pay attention to how your data are organised - if the reverse primer is reversed complement or not), 
-**Ref** - scientific reference for the primers you are using (crucial for writing a publication),
-**Min_insert_size** - the minimum size (in bp) of your target (**without primers and Illumina adaptors**),
-**Max_insert_size** - the same as above, but with the maximum size of your insert size (remember about the constraints of the sequencing machine, e.g., 2x300 bp),
-**Database_path** - the path to your database file. 
+
+
+- **Target_organism** - the info about what organisms your primers are targeting (Insect, Plant, Bacteria, Fungi),
+- **Gene** - what gene do your primers target (e.g., COI, 16S, ITS),
+- **Gene_fragment** - what fragment of the gene is amplified during PCR (for example, in bacterial 16S, it can be V4 or V1-V2 hypervariable region),
+- **Description** - as other users might not be familiar with crazy gene names, it is a good idea to describe what a particular gene is,
+- **Primer_Set** - what primer set are you using to amplify the marker gene fragment (extremely important for writing a paper),
+- **Primer_Forward** - the sequence of the forward primer used in PCR, IUPAC nucleotide code for degenerate primers is welcomed, 
+- **Primer_Reverse** - the same as above, but for the reverse primer (pay attention to how your data are organised - if the reverse primer is reversed complement or not), 
+- **Ref** - scientific reference for the primers you are using (crucial for writing a publication),
+- **Min_insert_size** - the minimum size (in bp) of your target (**without primers and Illumina adaptors**),
+- **Max_insert_size** - the same as above, but with the maximum size of your insert size (remember about the constraints of the sequencing machine, e.g., 2x300 bp),
+- **Database_path** - the path to your database file. 
 
 You can create your own master.info, but please remember that if you are going to use a customised database, it has to be compatible with sintax algorithm as follows:
 _**>AY846382.1.1778;tax=d:Eukaryota,p:Chloroplastida,c:Chlorophyta,o:Chlorophyceae,f:Sphaeropleales,g:Monoraphidium,s:Monoraphidium_contortum**_
