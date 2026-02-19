@@ -148,36 +148,41 @@ _**>AY846382.1.1778;tax=d:Eukaryota,p:Chloroplastida,c:Chlorophyta,o:Chlorophyce
 
 ## 4. symbio_split - splitting libraries into datasets corresponding to different target regions
 
-First, we want to split the data for each of the libraries into bins representing our target genes:
-To do that we are going to use our [MultiPISS.py](https://github.com/Symbiosis-JU/Bioinformatic-pipelines/blob/main/multiPISS.py) script:
-1. Click on the link above and copy it (by clicking the icon 'copy raw contents' in the right upper corner of the box).
-2. use command:
-``` nano MultiPISS.py```.
-This will create an empty file named MultiPISS.py. Paste the script and exit file by ctr + x with saving the changes.
-3. Make this script executable by using command: ```chmod +x MultiPISS.py```.
+First, we want to split the data for each of the libraries into bins representing our target genes.
 
-**Now you can run script!**
-Type ```./MultiPISS.py``` (```./``` --- indicates that this file is in the current directory).
+type **symbio_split**, press enter. What you'll see is:
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/split_start.png?raw=true)
 
-Oh no! You've got an ERROR!:
+So let's proceed with the analysis, and the script will ask what we want to do with master.info if we want to:
+- see default
+- use default
+- use custom
 
-```
-ERROR! CHECK YOUR INPUT PARAMETERS!
-Please provide:
-1) sample list with information about your libraries created in following manner (tab-separated):
-Sample_name Sample_name_R1.fastq	Sample_name_R2.fastq
-Please remember to first un-gzip your .gz files!!!
-2) FULL path to the directory with R1 and R2 fiels for all the amplicon libraries that you want to analyse e.g.:
-/home/Data/For/Nature/Publication/)
-shortcuts such as "./" are unlikely to work
-3) output directory path.
-4) Information whether the last two characters of your sample name indicate well number
-1=True, 0=False
-If you claim 1 but the last two characters are not numbers, it may create an error!
-5) Number of cores to use
-```
+Let's see what the default master.info looks like:
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/split_master.info.png?raw=true)
 
-As you can see, we need to provide some input parameters for our script.
+You can inspect the default master.info if the target of your interest is already there. 
+After inspection, you can choose to either go with the default or with your custom master file.
+Now the fun begins! Choose which targets you want the script to look for (use space to select):
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/split_targets_selection.png?raw=true)
+
+Next, you need to select in which mode you want to analyse your data:
+![alt tekst](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/split_mode.png?raw=true)
+
+**A)** - all the R1 and R2 pairs in the directory will be split,
+**B)** - all the R1 and R2 pairs across the dictionaries you specify will be split,
+**C)** - if you want to analyse particular samples scattered across different dictionaries, choose this option. You will be asked to provide a sample list. 
+
+Let's go with option **A** and use our Greenland sub-data (you don't have to copy any files; if you are writing the path, don't be afraid to hit tab for autofill):
+![alt tekst](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/split_path.png?raw=true)
+
+And now is the time to decide where your output folder should be located and how it should be named (by default, the output directory is time-stamped):
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/split_output.png?raw=true)
+
+Then decide how many CPUs you want to allocate to this task, and if you are going with a dry run (no output files, just the info on how many reads are allocated to each category).
+**ET VOILÀ!!!**
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/split_summary.png?raw=true)
+
 
 #### Sample_list:
 
