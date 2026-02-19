@@ -193,7 +193,7 @@ Now you can see that you have four new subdirectories: **16SV1-V2  16SV4  COIBF3
 - 16SV4 --- containes bacterial 16S V4 reads,
 - unassigned --- with sequences that were unrecognised by the script.
 
-**Let's proceed with COI data analysis!**
+**Let's proceed with 16S V4 data analysis!**
 
 
 ## 5. symbio_core
@@ -203,7 +203,36 @@ Next, it converts fastq to fasta file, dereplicates and denoise sequences in eac
 Joins all the libraries into one table and assigns all the sequences to taxonomy.
 **This is the first step of analysis of bacterial 16S and COI (or other) data!**
 
+Similarly to symbio_split, the only thing you need to do to further analyse your data is to type:
+**symbio_core** and hit enter! You can do it whenever you like; you don't need to be in the directory
+with the data, as the script will ask you about the input and output paths. 
 
+You will be asked similar questions as in the previous step: 
+if you want to proceed, how to handle master.info and which target you are going to analyse (**this time you need to choose one!**).
+
+Then you need to decide if you want the OUTPUT directory to be defaulted in the directory with the split data or type a custom path: 
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/core_output.png?raw=true)
+
+And then, if you want to start the analysis from the beginning or at any of the major steps of the analysis. 
+The latter is useful if, for some reason, your analysis crashed at some point, but further steps went without problems:
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/core_resume.png?raw=true)
+
+We want to start from the beginning as we are doing our analysis for the first time!
+Next, allocate how many CPUs you want to use in your analysis (**REMEMBER TO BOOK THE CLUSTER FIRST IN GOOGLE CALENDAR!!!**).
+And what is the phred score you want to use for your sequences to pass the quality filter. "**What is the phred score?**" you might ask.
+
+_A Phred score is a quantitative measure of the quality of identifying nucleobases (A, C, T, G) in DNA sequencing, representing the probability that a base call is incorrect. It ranges from 0 to 99+, where higher scores indicate greater confidence, with Q = 30 (recommended in our pipeline) indicating 99,9% accuracy._
+
+So basically, with our thoroughly checked polymerase as well as with Illumina reads, we can confidently set the minimum Phred Quality at a minimum of 30. Therefore, our sequences would be more trustworthy.  
+
+**And that's all!!!** 
+Now the script will automatically go through all your samples, conducting all the steps listed in "Chapter 3" of this guideline.
+Of course, you can inspect all the intermediate directories to check what is happening there, but your goal is to obtain two main tables:
+- **OTU_table_expanded** - with the 97% simillarity clustering of your genotypes (equivalent of species).
+- **zOTU_table_expanded** - with zerio-radius OTUs, each sequence that differs at least by one nucleotide will be a different zOTU.
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/core_results.png?raw=true)
+
+As this is still contaminated data and unfiltered data, probably you are going to use the zOTU table for further steps.
 
 ## MAO script
 This script is simple, but brilliant at the same time.
