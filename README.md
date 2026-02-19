@@ -5,9 +5,10 @@ We hope that this script will help you navigate through the analyses of an examp
 1. Some basic Linux commands.
 2. Accessing example data
 3. Workflow overview
-4. Data splitting into bins corresponding to different targets: MultiPISS script
-5. The core amplicon analysis workflow: LSD script
-6. Mitochondrial data analysis: MAO script
+4. Data splitting into bins corresponding to different targets: symbio_split
+5. The core amplicon analysis workflow: symbio_core
+6. Mitochondrial data analysis: symbio_barcode
+7. Decontamination and quantification: symbio_quant
 
 
 ## 1. Before we start, let's get familiar with some Linux commands!
@@ -184,119 +185,23 @@ Then decide how many CPUs you want to allocate to this task, and if you are goin
 ![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/split_summary.png?raw=true)
 
 
-#### Sample_list:
-
-**You can make it in Excel or using other tools. Or run the following command in the directory with your R1 and R2 files:**
-
-```
-rm sample_list.txt   #removing any potentially corrupted files that might exist already
-for file in *_R1.fastq; do
-    SampleName=`basename $file _R1.fastq `
-    SampleNameMod=$(echo "$SampleName" | sed 's/-/_/g' | sed 's/_S[0-9]\+$//g')
-    echo $SampleNameMod "$SampleName"_R1.fastq "$SampleName"_R2.fastq >> sample_list.txt
-done
-```
-**Now we are ready to run the MultiPISS script for real!**
-Use following command:
-```
-./MultiPISS.py sample_list.txt ~/workshop_march_2022 ~/workshop_march_2022/split 0 20
-```
-This command will run our script using created sample_list, output it without visualization in the 'split' subdirectory using 20 cores.
-
-Type: 
-```
-cd ~/workshop_march_2022/split
-```
-and then:
-```
-ls
-```
-
-Now you can see that you have four new subdirectories: **COI_trimmed  incorrect_untrimmed  V12_trimmed  V4_trimmed**
-- COI_trimmed --- containes mitochondrial COI reads with trimmed primers sequences,
-- V12_trimmed --- containes bacterial 16S V1-V2 reads with trimmed primers sequences,
-- V4_trimmed --- containes bacterial 16S V4 reads with trimmed primers sequences,
-- incorrect_untrimmed --- with sequences that were unrecognize by the script with primers still attached.
-Let's now look at the contents of these folders:
-
-```
-ls -l COI_trimmed/
-```
-
-Let's look at an example file. Command `head` displays the top lines, that should give us a sense of the contents. Do you remember the fastq format?
-
-```
-head -12 COI_trimmed/GRE1805_F_COI.fastq
-```
-
-You may want to check the numbers of reads that were classified to each category.
-We can do this by counting how many times the conserved first portion of the read name
-("A00187") appears in each of the pre-split and post-split files. The numbers should agree!
-
-```
-cd ~/workshop_march_2022
-grep -c "@A00187" GRE1805_R1.fastq
-grep -c "@A00187" split/*/GRE1805_F*     ### ...where "split" is the name of your post-splitting data folder
-```
+Now you can see that you have four new subdirectories: **16SV1-V2  16SV4  COIBF3-BR2  unassigned  primer_binner_20260219_120817.log  primer_binner_summary.tsv**
+- COIBF3-BR2 --- contains mitochondrial COI reads,
+- 16SV1-V2 --- containes bacterial 16S V1-V2 reads,
+- 16SV4 --- containes bacterial 16S V4 reads,
+- unassigned --- with sequences that were unrecognised by the script.
 
 **Let's proceed with COI data analysis!**
 
 
-
-## 5. LSD script
+## 5. symbio_core
 This is the core amplicon analysis workflow. 
 This script joins F and R (R1 and R2) reads, passing only high-quality ones. 
-Next it converts fastq to fasta file, dereplicate and denoise sequences in each library seperately.
+Next, it converts fastq to fasta file, dereplicates and denoise sequences in each library separately.
 Joins all the libraries into one table and assigns all the sequences to taxonomy.
-**This is a first step of analysis of bacterial 16S and COI data!**
+**This is the first step of analysis of bacterial 16S and COI (or other) data!**
 
-Again, go to our repository and copy [LSD.py](https://github.com/Symbiosis-JU/Bioinformatic-pipelines/blob/main/LSD.py).
-Copy it.
-Use ```nano LSD.py``` to create an empty file **in the directory you have your marker gene reads** (for COI: ~/workshop_march_2022/split/COI_trimmed).
-Close it with saving changes and make this file executable with ```chmod +x LSD.py```.
 
-Again if you will type just ```./LSD.py``` you will get an error about putting some parameters. In this case:
-```
-ERROR! CHECK YOUR INPUT PARAMETERS!
-Please provide:
-1) sample list with information about your libraries created in following manner:
-Sample_name Sample_name_R2.fastq Sample_name_R2.fastq
-Please remember to first un-gzip your .gz files!!!
-2) path to the directory with R1 and R2 fiels for all the amplicon libraries that you want to analyse e.g.:
-/home/Data/For/Nature/Publication/)
-3) type of data, please indicate if you are going to analyse 16SV4, 16SV1-V2 (Bacterial) or COI.""")
-```
-So, again we need a sample list. But this time as an input we are using an output of MultiPISS.
-Now our imput files for COI analysis looks like this:
-```
-GRE2290_F_COI.fastq
-GRE2290_R_COI.fastq
-```
-We will use simmilar (**but not the same**) commend as before:
-```
-for file in *_F_COI.fastq; do
-    SampleName=`basename $file _F_COI.fastq `
-    SampleNameMod=$(echo "$SampleName" | sed 's/-/_/g' | sed 's/_S[0-9]\+$//g')
-    echo $SampleNameMod "$SampleName"_F_COI.fastq "$SampleName"_R_COI.fastq >> sample_list_COI.txt
-done
-```
-**Running LSD.py:**
-As this part may take a while **remember to use screen session!**:
-```
-screen -S LSD
-```
-and then:
-```
-./LSD.py sample_list_COI.txt ~/workshop_march_2022/split/COI_trimmed COI
-```
-Now you have **A LOT** of files. But for now the most important for you is:
-```
-zotu_table_expanded.txt
-```
-This is a table with all the COI sequences in all your libraries assigned to a various taxonomic levels.
-You can use it for your analysis
-OR
-You can use it as an imput for [MAO.py](https://github.com/Symbiosis-JU/Bioinformatic-pipelines/blob/main/MAO.py) script!
 
 ## MAO script
 This script is simple, but brilliant at the same time.
