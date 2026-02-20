@@ -232,9 +232,9 @@ Of course, you can inspect all the intermediate directories to check what is hap
 - **zOTU_table_expanded** - with zerio-radius OTUs, each sequence that differs at least by one nucleotide will be a different zOTU.
 ![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/core_results.png?raw=true)
 
-As this is still contaminated data and unfiltered data, probably you are going to use the zOTU table for further steps.
+As this is still contaminated and unfiltered data, probably you want to use the zOTU table for further steps.
 
-## symbio_core
+## symbio_quant
 Type **symbio_quant** to activate the script.
 
 First, the script will ask you to choose where to create a time-stamped output directory:
