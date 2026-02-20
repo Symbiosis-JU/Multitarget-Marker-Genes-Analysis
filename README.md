@@ -312,23 +312,25 @@ number of plasmids added and the proportion of homogenate taken for DNA extracti
 
 Here is a table for our workshop dataset:
 
-Sample_ID	ExtractionSpikeCopies	HomogenateFraction
-16SV4_GRE0619_Neg_extr	10000	0.25
-16SV4_GRE0643_Neg_extr	10000	0.25
-16SV4_GRE0692_Neg_PCR	10000	0.25
-16SV4_GRE0882	10000	0.25
-16SV4_GRE1002	10000	0.25
-16SV4_GRE1092_Neg_PCR	10000	0.25
-16SV4_GRE1294_Positive_4	10000	0.25
-16SV4_GRE1351	10000	0.25
-16SV4_GRE1775	10000	0.25
-16SV4_GRE1805	10000	0.25
-16SV4_GRE2059	10000	0.25
-16SV4_GRE2090	10000	0.25
-16SV4_GRE2091	10000	0.25
-16SV4_GRE2290	10000	0.25
-16SV4_GRE2313	10000	0.25
-16SV4_GRE2395_Positive_5	10000	0.25
+| Sample_ID                      | ExtractionSpikeCopies | HomogenateFraction |
+|--------------------------------|-----------------------|--------------------|
+| 16SV4_GRE0619_Neg_extr        | 10000                 | 0.25               |
+| 16SV4_GRE0643_Neg_extr        | 10000                 | 0.25               |
+| 16SV4_GRE0692_Neg_PCR         | 10000                 | 0.25               |
+| 16SV4_GRE0882                 | 10000                 | 0.25               |
+| 16SV4_GRE1002                 | 10000                 | 0.25               |
+| 16SV4_GRE1092_Neg_PCR         | 10000                 | 0.25               |
+| 16SV4_GRE1294_Positive_4      | 10000                 | 0.25               |
+| 16SV4_GRE1351                 | 10000                 | 0.25               |
+| 16SV4_GRE1775                 | 10000                 | 0.25               |
+| 16SV4_GRE1805                 | 10000                 | 0.25               |
+| 16SV4_GRE2059                 | 10000                 | 0.25               |
+| 16SV4_GRE2090                 | 10000                 | 0.25               |
+| 16SV4_GRE2091                 | 10000                 | 0.25               |
+| 16SV4_GRE2290                 | 10000                 | 0.25               |
+| 16SV4_GRE2313                 | 10000                 | 0.25               |
+| 16SV4_GRE2395_Positive_5      | 10000                 | 0.25               |
+
 
 Finally, the script will ask if you want to keep your positives in the decontaminated table.
 
