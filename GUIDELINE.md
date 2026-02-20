@@ -50,7 +50,7 @@ We hope that this script will help you navigate through the analyses of an examp
 - First, log in to your account on *azor* cluster.
 - Then, copy the prepared sample data to the directory of your choosing (we recommend using your home directory):
 ```
-cp -r /mnt/storage/users/symbio/workshop_march_2022 ~/
+cp -r /mnt/storage/users/symbio/workshops/workshop_2026_Greenland_data/ ~/
 ```
 - Now you have folder "workshop_march_2022" containing R1.fastq and R2.fastq files for each sample.
 
