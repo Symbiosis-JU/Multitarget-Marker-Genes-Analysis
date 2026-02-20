@@ -259,6 +259,82 @@ To quantify our bacterial loads, we need to specify which spike-in was used at t
 In this case, our extraction spike-in is: Ec5502_16S:
 ![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/quant_spike_ins.png?raw=true)
 
+The script will also ask about which spike-in is a PCR one; we can select it, but for now, we don't need it.
+
+Now the script will ask about various thresholds for the decontamination steps.
+It is **super important** to pay attention here. You can use the default threshold, but keep in mind that each dataset 
+is different and might need extra care. 
+
+**ThresholdA - Contaminant rule**:
+_A genotype is considered a **true symbiont** only if its maximum relative abundance
+  in any experimental sample is more than **A** × higher than in any blank sample._
+
+**Threshold B — 'Other' rule**:
+_A genotype classified as a symbiont will instead be labelled as **Other**
+  if its maximum relative abundance in experimental samples is below this value_
+
+**Threshold C — Library removal rule**:
+  _Any library (sample) with more than **C%** combined contamination + spike-in reads
+  will be marked for removal from decontaminated outputs_
+
+This is tricky if you are working with insects or samples that possibly have no microbiome. 
+**IT CAN HAPPEN**, and then they will be deleted - so again, be careful.
+
+**Threshold D — Safe-spot rule (relative abundance %)**:
+  _A contaminant genotype is flagged for review if it reaches **≥D%** relative abundance
+  in a large number of experimental libraries (see next threshold)_
+
+Sometimes, due to cross-talk in negative control, you will have, for example, 3 reads of real symbiont reads and nothing more. 
+Hence, it reaches 100% relative abundance in the negative sample and would be considered a contaminant.
+That is why I introduced ThresholdD - to avoid such situations. 
+
+**Threshold E — Safe-spot rule (minimum number of libraries)**:
+  _The minimum number of experimental libraries **(≥E)** in which a contaminant
+  must exceed the D% threshold to trigger a Safe-spot warning_
+
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/quant_threshold.png?raw=true)
+
+As _Brachybacterium_ is a known contaminant in our kits, and sometimes avoids being recognised as a contaminant,
+the script will make sure to assign it as such. 
+
+And in fact, the script warns us that some libraries are heavily contaminated. But let's keep them for further inspection:
+
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/quant_warning.png?raw=true)
+
+Next, the script asks if you also want the relative abundance tables (not only the read ones).
+Sometimes you want them, and sometimes you will do it automatically in R (for example), so it's up to you. 
+
+Now,**QUANTIFICATION** 
+The script will ask for the table with the information needed for the quantification: 
+number of plasmids added and the proportion of homogenate taken for DNA extraction.
+
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/quant_quant_file.png?raw=true)
+
+Here is a table for our workshop dataset:
+
+Sample_ID	ExtractionSpikeCopies	HomogenateFraction
+16SV4_GRE0619_Neg_extr	10000	0.25
+16SV4_GRE0643_Neg_extr	10000	0.25
+16SV4_GRE0692_Neg_PCR	10000	0.25
+16SV4_GRE0882	10000	0.25
+16SV4_GRE1002	10000	0.25
+16SV4_GRE1092_Neg_PCR	10000	0.25
+16SV4_GRE1294_Positive_4	10000	0.25
+16SV4_GRE1351	10000	0.25
+16SV4_GRE1775	10000	0.25
+16SV4_GRE1805	10000	0.25
+16SV4_GRE2059	10000	0.25
+16SV4_GRE2090	10000	0.25
+16SV4_GRE2091	10000	0.25
+16SV4_GRE2290	10000	0.25
+16SV4_GRE2313	10000	0.25
+16SV4_GRE2395_Positive_5	10000	0.25
+
+Finally, the script will ask if you want to keep your positives in the decontaminated table.
+
+**AND DONE**
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/quant_summary.png?raw=true)
+
 ## MAO script
 This script is simple, but brilliant at the same time.
 It uses ```zotu_table_expanded.txt``` of COI data as an in input and produces:
@@ -271,126 +347,3 @@ Just do our trick with creating an ampty file with ```nano MAO.py```, paste the 
 Make script executable with ```chmod +x MAO.py``` and run it with ```./MAO.py zotu_table_expanded.txt```.
 
 
-This script is used for decontamination of 16S data.
-**Be aware that we are working with insects. If you are working with a different data type, consider applying some changes to fit your needs.**
-For example, this script deletes all reads characterized as chloroplasts by default, so if you are working with lichens, that may cause a lot of damage (happened before).
-
-**Before running this script you need to run LSD for you 16S data (eg. V4)**
-Go to the directory with V4 reads:
-```
-cd ~/workshop_march_2022/split/V4_trimmed
-```
-Create a **sample_list** in similar manner as with COI data:
-```
-for file in *_F_V4.fastq; do
-    SampleName=`basename $file _F_V4.fastq `
-    SampleNameMod=$(echo "$SampleName" | sed 's/-/_/g' | sed 's/_S[0-9]\+$//g')
-    echo $SampleNameMod "$SampleName"_F_V4.fastq "$SampleName"_R_V4.fastq >> sample_list_V4.txt
-done
-```
-You can copy the LSD script used for COI data, as it is the same for 16S:
-```
-cp ~/workshop_march_2022/split/COI_trimmed/LSD.py ~/workshop_march_2022/split/V4_trimmed
-```
-**Remember that when you copy executable script, you don't need to make it executable again**
-
-Now, run LSD for you 16S V4:
-```
-./LSD.py sample_list_V4.txt ~/workshop_march_2022/split/V4_trimmed 16SV4
-```
-
-OK, we have all inputs to run **QUACK**
-
-To run Quack you need:
-- the actual script! Copy it from [QUACK.py](https://github.com/Symbiosis-JU/Bioinformatic-pipelines/blob/main/QUACK.py) and change permissions to make executable, as before!
-- zotu table produced by LSD (zotu_table_expanded.txt),
-- otus.tax, also produced by LSD,
-- list of blanks --- tab separated text file with names of blank (negative control) libraries with description (PCR/Extraction_blank). 
-In our case, you may want to create a file "blank_list.txt" that looks like this:
-```
-NegExtr_GRE0619  blank_extr
-NegExtr_GRE0643  blank_extr
-NegPCR_GRE0692  blank_PCR
-NegPCR_GRE1092	blank_PCR
-```
-...or perhaps like this? Depending on your actual sample names. Make sure that they are correct!
-```
-GRE0619_Neg_extr  blank_extr
-GRE0643_Neg_extr	blank_extr
-GRE0692_Neg_PCR blank_PCR
-GRE1092_Neg_PCR blank_PCR
-```
-
-- list of spikeins used --- tab separated text file with names of used spikeins with description (PCR/Extraction_spikein).
-In our case, you may want to create a file "spikeins.txt" and with the contents as below.
-```
-Ec5502	Extr_Spikein
-Ec5001	PCR_Spikein
-```
-- ThresholdA --- a unique genotype will be assigned as a contaminant UNLESS the maximum relative abundance it attains in at least one experimental library is more than ThresholdA * of the maximum relative abundance it attains in any blank library. Recommended value: 10
-- ThresholdB --- a unique genotype assigned previously as a symbiont will be assigned as "Other" UNLESS the maximum relative abundance it attains in at least one experimental library is more than ThresholdB. Recommended value: 0.001
-- ThresholdC --- a library will be deleted UNLESS the % of contamination will be lower than ThresholdC. Recommended value: 30
-
-OK, everything checked? Let's run this baby!:
-```
-./QUACK.py zotu_table_expanded.txt blank_list.txt spikein.txt otus.tax 10 0.001 30
-```
-If everything went well, script should print to a screen following message:
-```
-				---------- WELCOME TO QUACK (Beta_version): ----
-
-					Q -Quantification 
-
-					U - Utility 
-
-					A - And 
-
-					C - Contamination 
-
-					K - Killer 
-
-				-------------------------------------------------
-
-Opening OTU table..................... OK!
-Opening List of blanks..................... OK!
-Blank list proceeded succesfully,
-I am going to use 2 of PCR blanks:
-GRE0692_Neg_PCR, GRE1092_Neg_PCR, 
-
-I am going to use 3 of Extraction blanks:
-GRE0619_Neg_extr, GRE0643_Neg_extr, GRE0667_Neg_extr, 
-Opening List of Spikeins..................... OK!
-
-Spikein list proceeded succesfully!
-I am going to use following as PCR spikein:  Ec5001
-I am going to use following as Extraction spikein:  Ec5502
-Searching for Non-bacteria taxa..................... 
-Chimeras, Eukaryota, Chloroplast, Mitochondria and Archea reads has been recognized!
-Saving Table with classes....................... OK!
-Saving Table with statistics....................... OK!
-Saving Decontaminated zOTU Table....................... OK!
-Adding sequences...................... OK!
-Saving Decontaminated OTU Table....................... OK!
-
-DONE! May QUACK bring you luck!
-         ,-.
-       ,--' ~.).
-     ,'         `.
-    ; (((__   __)))
-    ;  ( (#) ( (#)
-    |   \_/___\_/|
-   ,"  ,-'    `__".
-  (   ( ._   ____`.)--._        _
-   `._ `-.`-' \(`-'  _  `-. _,-' `-/`.
-    ,')   `.`._))  ,' `.   `.  ,','  ;
-  .'  .     `--'  /     ).   `.      ;
- ;     `-        /     '  )         ;
- \                       ')       ,'
-  \                     ,'       ;
-   \               `~~~'       ,'
-    `.                      _,'
-      `.                ,--'
-        `-._________,--') 
-```
-
-   
