@@ -337,15 +337,13 @@ Finally, the script will ask if you want to keep your positives in the decontami
 **AND DONE**
 ![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/quant_summary.png?raw=true)
 
-## MAO script
-This script is simple, but brilliant at the same time.
+## symbio_barcode
+
 It uses ```zotu_table_expanded.txt``` of COI data as an in input and produces:
 - barcode.txt that contains info about most abundand COI barcode, taxonomy and bacteria presence
 - barcode.fasta, containing most abundand Eucaryotic COI barcode per each library/sample
 - euc5.txt, containing information about Eucaryotic COI sequences that represents at least 5% of total Eucaryotic reads per sample
 - bac.txt, containing information about bacterial COI sequences
 
-Just do our trick with creating an ampty file with ```nano MAO.py```, paste the script and close the file with saving.
-Make script executable with ```chmod +x MAO.py``` and run it with ```./MAO.py zotu_table_expanded.txt```.
 
 
