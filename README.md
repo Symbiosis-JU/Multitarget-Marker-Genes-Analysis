@@ -43,10 +43,10 @@ We hope that this script will help you navigate through the analyses of an examp
 
 **There are many more useful commands and tools - you do want to learn them!**
 
-**Let's use some of those beautiful commands in action!**
 
 
-## 2. Copying example data to your folder.
+
+## 2. Copying example data to your folder (THIS IS OPTIONAL AS YOU DO NOT HAVE TO COPY ANY FILES LOCALLY).
 - First, log in to your account on *azor* cluster.
 - Then, copy the prepared sample data to the directory of your choosing (we recommend using your home directory):
 ```
@@ -111,11 +111,11 @@ To successfully use our tools, you need some external programs and packages. Bel
 
 ### symbio_quant:
 - Uses as an input:
-  - 16S zotu table (produced by symbio_core),
+  - 16S zOTU table (produced by symbio_core),
 - Decontaminates 16S data based on (automatically recognised) negative controls,
 - Creates:
   - Table with zOTUs assigned as: symbiont, other or contaminants,
-  - Decontaminated zotu and otu tables (both with reads and abundances),
+  - Decontaminated zOTU and OTU tables (both with reads and abundances),
   - Statistics table,
   - **optionally** quantifies your data based on the provided information about the proportion of homogenate taken for the DNA extraction and the number of spike-ins added.
 
@@ -143,7 +143,7 @@ You can create your own master.info, but please remember that if you are going t
 _**>AY846382.1.1778;tax=d:Eukaryota,p:Chloroplastida,c:Chlorophyta,o:Chlorophyceae,f:Sphaeropleales,g:Monoraphidium,s:Monoraphidium_contortum**_
 
 ### Symlinks:
-**You don't have to download any scripts. They all are stored in our cluster, and as long as you have our software dictionary in your PATH**
+**You don't have to download any scripts. They are all stored in our cluster, and as long as you have our software dictionary in your PATH**
 **the only thing you need to do to run the analysis is to type the name of the tool, e.g., symbio_split and hit enter**
 
 
@@ -183,6 +183,7 @@ And now is the time to decide where your output folder should be located and how
 ![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/split_output.png?raw=true)
 
 Then decide how many CPUs you want to allocate to this task, and if you are going with a dry run (no output files, just the info on how many reads are allocated to each category).
+(**REMEMBER TO BOOK THE CLUSTER FIRST IN GOOGLE CALENDAR!!!**)
 **ET VOILÀ!!!**
 ![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/split_summary.png?raw=true)
 
@@ -194,7 +195,6 @@ Now you can see that you have four new subdirectories: **16SV1-V2  16SV4  COIBF3
 - unassigned --- with sequences that were unrecognised by the script.
 
 **Let's proceed with 16S V4 data analysis!**
-
 
 ## 5. symbio_core
 This is the core amplicon analysis workflow. 
@@ -234,6 +234,31 @@ Of course, you can inspect all the intermediate directories to check what is hap
 
 As this is still contaminated data and unfiltered data, probably you are going to use the zOTU table for further steps.
 
+## symbio_core
+Type **symbio_quant** to activate the script.
+
+First, the script will ask you to choose where to create a time-stamped output directory:
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/quant_output.png?raw=true)
+
+Next, you have to specify where the zOTU table file is located. As you can see, you can use ./ if you happen to be in the directory
+with symbio_core output:
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/quant_input.png?raw=true)
+
+In the previous interactions of this script, you had to indicate the names of libraries that will be assigned as negative controls.
+Now, we are doing that automatically. In our Lab all the negatives have a prefix "neg", so it is easy to find them. 
+However, if you have negatives named differently, you can use keywords to find them:
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/quant_negs.png?raw=true)
+
+The same situation is with positive controls:
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/quant_positiv.png?raw=true)
+
+And to be sure, the script will summarise what negatives and positives we have chosen:
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/quant_control_sum.png?raw=true)
+
+To quantify our bacterial loads, we need to specify which spike-in was used at the DNA extraction step.
+In this case, our extraction spike-in is: Ec5502_16S:
+![alt text](https://github.com/Symbiosis-JU/Multitarget-Marker-Genes-Analysis/blob/main/quant_spike_ins.png?raw=true)
+
 ## MAO script
 This script is simple, but brilliant at the same time.
 It uses ```zotu_table_expanded.txt``` of COI data as an in input and produces:
@@ -245,7 +270,7 @@ It uses ```zotu_table_expanded.txt``` of COI data as an in input and produces:
 Just do our trick with creating an ampty file with ```nano MAO.py```, paste the script and close the file with saving.
 Make script executable with ```chmod +x MAO.py``` and run it with ```./MAO.py zotu_table_expanded.txt```.
 
-## QUACK script
+
 This script is used for decontamination of 16S data.
 **Be aware that we are working with insects. If you are working with a different data type, consider applying some changes to fit your needs.**
 For example, this script deletes all reads characterized as chloroplasts by default, so if you are working with lichens, that may cause a lot of damage (happened before).
