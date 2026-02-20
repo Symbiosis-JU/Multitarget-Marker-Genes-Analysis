@@ -172,7 +172,7 @@ Next, you need to select in which mode you want to analyse your data:
 
 **A)** - all the R1 and R2 pairs in the directory will be split,
 
-**B)** - all the R1 and R2 pairs across the dictionaries you specify will be split,
+**B)** - all the R1 and R2 pairs across the directories you specify will be split,
 
 **C)** - if you want to analyse particular samples scattered across different dictionaries, choose this option. You will be asked to provide a sample list. 
 
